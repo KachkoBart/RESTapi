@@ -59,17 +59,18 @@ public class ClientControllerTest {
 		//objectMapper = new ObjectMapper();
 	}
 
-	Semaphore sem = new Semaphore(Runtime.getRuntime().availableProcessors());
+	Semaphore sem = new Semaphore(10);
 	List<Long> countMillisToOneResponse = new ArrayList<>();
 
 	@Test
 	void findClients() throws Exception {
 		setClients();
 		checkClients();
+		sem.acquire(10);
 		Collections.sort(countMillisToOneResponse);
-		System.out.println(percentile(countMillisToOneResponse, 0.95));
-		System.out.println(percentile(countMillisToOneResponse, 0.99));
-		System.out.println(countMillisToOneResponse.get(countMillisToOneResponse.size()/2));
+		System.out.println("95:" + percentile(countMillisToOneResponse, 95));
+		System.out.println("99:" + percentile(countMillisToOneResponse, 99));
+		System.out.println("the median: " + countMillisToOneResponse.get(countMillisToOneResponse.size()/2));
 	}
 
 	private void setClients(){
